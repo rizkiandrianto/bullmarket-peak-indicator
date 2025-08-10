@@ -1,7 +1,12 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const cors = require('cors');
+const dayjs = require('dayjs');
+const utc = require("dayjs/plugin/utc")
+const timezone = require("dayjs/plugin/timezone");
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -75,7 +80,7 @@ async function scrapeBullMarketIndicators() {
         const title = cell[1]?.innerText || '';
         const current = (cell[2]?.innerText || '').replace(/,/g, '');
         const reference = (cell[3]?.innerText || '').replace(/,/g, '');
-        const hitted = !(cell[4]?.querySelector('.fall-color'));
+        const hit = !(cell[4]?.querySelector('.fall-color'));
         const progress = (cell[6]?.querySelector('.MuiBox-root')?.innerText || '').replace('%', '');
         const floatProgress = parseFloat(progress);
         
@@ -83,7 +88,7 @@ async function scrapeBullMarketIndicators() {
           title,
           current,
           reference,
-          hitted,
+          hit,
           progress: floatProgress,
         });
       });
@@ -93,9 +98,9 @@ async function scrapeBullMarketIndicators() {
 
     return {
       success: true,
-      date: new Date().toISOString(),
-      data,
-      count: data.length
+      date: dayjs().tz("Asia/Jakarta").format(),
+      count: data.length,
+      data
     };
 
   } catch (error) {
@@ -132,7 +137,7 @@ app.get('/api/indicators', async (req, res) => {
       success: false,
       error: 'Failed to fetch bull market indicators',
       message: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: dayjs().tz("Asia/Jakarta").format()
     });
   }
 });
@@ -188,7 +193,7 @@ app.use((error, req, res, next) => {
     success: false,
     error: 'Internal server error',
     message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : error.message,
-    timestamp: new Date().toISOString()
+    timestamp: dayjs().tz("Asia/Jakarta").format()
   });
 });
 
