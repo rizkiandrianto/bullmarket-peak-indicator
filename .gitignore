@@ -1,2 +1,9 @@
 .git
 node_modules/
+.env
+.vercel
+*.log
+.DS_Store
+dist/
+build/
+.env.local

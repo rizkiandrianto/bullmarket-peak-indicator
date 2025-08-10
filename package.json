@@ -1,5 +1,25 @@
 {
+  "name": "bullmarket-peak-indicator-api",
+  "version": "1.0.0",
+  "description": "Vercel API for Bitcoin bull market peak indicators",
+  "main": "api/indicators.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "deploy": "vercel --prod",
+    "test": "node test-local.js",
+    "start": "vercel dev"
+  },
   "dependencies": {
-    "puppeteer": "^24.16.0"
+    "puppeteer": "^21.0.0",
+    "puppeteer-core": "^21.0.0",
+    "@sparticuz/chromium": "^131.0.0",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
