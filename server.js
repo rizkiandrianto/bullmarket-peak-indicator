@@ -71,9 +71,24 @@ async function scrapeBullMarketIndicators() {
     }
 
     // Extract data from the page
-    const data = await page.evaluate(() => {
+    const result = await page.evaluate(() => {
       const items = [];
       const elements = document.querySelectorAll('.ant-table-row');
+      const holdProgressBar = document.querySelector('.ant-progress-steps').previousElementSibling;
+
+      let overallPosition = 0; // Default value
+
+      const parseValue = (value) => {
+        if (!value) return 0;
+        const num = parseFloat(value.replace(/[^0-9.-]+/g, ''));
+        return isNaN(num) ? 0 : num;
+      };
+      
+      if (holdProgressBar) {
+        const styles = window.getComputedStyle(holdProgressBar);
+        // Try different properties to get progress position
+        overallPosition = parseValue(styles.left) || 0;
+      }
 
       elements.forEach((el) => {
         const cell = el.querySelectorAll('.ant-table-cell');
@@ -93,14 +108,15 @@ async function scrapeBullMarketIndicators() {
         });
       });
 
-      return items;
+      return { items, overallPosition };
     });
 
     return {
       success: true,
       date: dayjs().tz("Asia/Jakarta").format(),
-      count: data.length,
-      data
+      count: result.items.length,
+      overallPosition: result.overallPosition,
+      data: result.items
     };
 
   } catch (error) {
