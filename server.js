@@ -4,6 +4,7 @@ const cors = require('cors');
 const dayjs = require('dayjs');
 const utc = require("dayjs/plugin/utc")
 const timezone = require("dayjs/plugin/timezone");
+const chromium = require('@sparticuz/chromium');
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
