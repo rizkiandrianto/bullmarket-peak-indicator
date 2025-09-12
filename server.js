@@ -1,10 +1,9 @@
 const express = require('express');
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 const cors = require('cors');
 const dayjs = require('dayjs');
 const utc = require("dayjs/plugin/utc")
 const timezone = require("dayjs/plugin/timezone");
-const chromium = require('@sparticuz/chromium');
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -22,10 +21,9 @@ async function scrapeBullMarketIndicators() {
   try {
     // Launch Puppeteer browser with production-ready config
     browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
     });
     const page = await browser.newPage();
 
