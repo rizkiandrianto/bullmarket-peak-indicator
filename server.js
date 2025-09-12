@@ -1,5 +1,5 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const cors = require('cors');
 const dayjs = require('dayjs');
 const utc = require("dayjs/plugin/utc")
@@ -14,36 +14,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Puppeteer configuration for Railway deployment
-const getPuppeteerConfig = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  
-  if (isProduction) {
-    return {
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--single-process',
-        '--disable-gpu'
-      ]
-    };
-  }
-  
-  return { headless: true };
-};
-
 // Scraper function extracted from index.js
 async function scrapeBullMarketIndicators() {
   let browser;
   
   try {
     // Launch Puppeteer browser with production-ready config
-    browser = await puppeteer.launch(getPuppeteerConfig());
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+    });
     const page = await browser.newPage();
 
     // Set user agent to avoid detection
