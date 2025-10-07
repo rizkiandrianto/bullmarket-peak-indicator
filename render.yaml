@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: bullmarket-peak-indicator
-    env: node
-    plan: free
-    buildCommand: "npm install"
-    startCommand: "npm start"
