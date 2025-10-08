@@ -1,17 +1,22 @@
-const puppeteer = require('puppeteer');
+import puppeteer from "puppeteer";
 
-(async () => {
-  // Launch Puppeteer browser
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
-
-  // Navigate to the URL
-  await page.goto('https://www.coinglass.com/bull-market-peak-signals', {
-    waitUntil: 'networkidle0',
-    timeout: 60000,
+export async function scrape() {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+      "--single-process"
+    ],
   });
 
-  // Wait for the page content to load properly
+  try {
+    const page = await browser.newPage();
+    await page.goto("https://www.coinglass.com/bull-market-peak-signals", { waitUntil: "networkidle0", timeout: 60000 });
+
+    // Wait for the page content to load properly
   await page.waitForSelector('.ant-table-row', { timeout: 60000 }); // Example selector, adjust it to the actual content
 
   // Get all the contents, for example, extracting the text of all the "bull-market" peaks
@@ -46,7 +51,14 @@ const puppeteer = require('puppeteer');
   }
   console.log(finalData);
 
-  // Close the browser
-  await browser.close();
-})();
+  return finalData;
+  } finally {
+    await browser.close();
+  }
+}
+
+// jalankan langsung kalau dipanggil manual
+if (import.meta && import.meta.url === `file://${process.argv[1]}`) {
+  scrape().then((d) => console.log(JSON.stringify(d, null, 2)));
+}
 
