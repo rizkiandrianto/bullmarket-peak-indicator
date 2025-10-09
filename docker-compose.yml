@@ -10,11 +10,11 @@ services:
       - SCRAPE_TIMEOUT_MS=60000
     networks:
       - dokploy-network
-    labels:
+    # labels:
       # Optional: kalau mau set domain dari compose (bisa juga via UI "Domains")
-      - "traefik.enable=true"
-      - "traefik.http.routers.bullpeak.rule=Host(`bullpeak.example.com`)"
-      - "traefik.http.services.bullpeak.loadbalancer.server.port=3000"
+      # - "traefik.enable=true"
+      # - "traefik.http.routers.bullpeak.rule=Host(`bullpeak.rizkiandrianto.com`)"
+      # - "traefik.http.services.bullpeak.loadbalancer.server.port=3000"
 
 networks:
   dokploy-network:
