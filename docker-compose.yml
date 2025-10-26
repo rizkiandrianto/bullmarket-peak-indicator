@@ -5,17 +5,14 @@ services:
     container_name: bullpeak
     restart: unless-stopped
     environment:
-      - PORT=3000
+      - PORT=3001
       # optional: tune waktu & timeout
       - SCRAPE_TIMEOUT_MS=60000
+    ports:
+      - "3001:3001"  # Host_Port:Container_Port
     networks:
-      - dokploy-network
-    # labels:
-      # Optional: kalau mau set domain dari compose (bisa juga via UI "Domains")
-      # - "traefik.enable=true"
-      # - "traefik.http.routers.bullpeak.rule=Host(`bullpeak.rizkiandrianto.com`)"
-      # - "traefik.http.services.bullpeak.loadbalancer.server.port=3000"
+      - kikilab
 
 networks:
-  dokploy-network:
+  kikilab:
     external: true
